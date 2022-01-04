@@ -4,7 +4,6 @@ import hamming
 from scipy.io.wavfile import read
 from scipy.io.wavfile import write
 import matplotlib.pyplot as plt
-import string
 
 
 def plotSound(path):
@@ -18,19 +17,19 @@ def plotSound(path):
     plt.clf()
     return audio
 
+
 def main():
-    audio = plotSound("sound2.wav")
-    
+    audio = plotSound("sound.wav")
     audioCodedValue = []
     for value in audio:
-        audioCodedValue.append(f'{value:08b}')
+        audioCodedValue.append(f"{value:08b}")
     codedAudio1 = []
     codedAudio2 = []
     for codeWord in audioCodedValue:
         halfCodedWord1 = codeWord[0:4]
         halfCodedWord2 = codeWord[4:]
-        coded1 = hamming.hamming7_4(halfCodedWord1)
-        coded2 = hamming.hamming7_4(halfCodedWord2)
+        coded1 = hamming.hamming_74(halfCodedWord1)
+        coded2 = hamming.hamming_74(halfCodedWord2)
 
         codedAudio1.append(coded1)
         codedAudio2.append(coded2)
@@ -65,11 +64,12 @@ def main():
 
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(corruptedMsg, dtype=dt)
-    write('corruptedSound.wav', 11025, data)
+    write("corruptedSound.wav", 11025, data)
 
     # Q12
-    # each audio value was coded on 8bit. In order to code them as hamming codes, they were
-    # cut in 2 half word of 4 bits. Each of these coded half words are at the same index
+    # each audio value was coded on 8bit. In order to code them as hamming codes,
+    # they were cut in 2 half word of 4 bits. Each of these coded half words
+    # are at the same index
     # in the corresponding codedAudio list. So first half is in codedAudio1 and
     # second half is in codedAudio2, at the same index.
     # We know make them go through our channel.
@@ -118,7 +118,7 @@ def main():
 
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(decodedHammingAudioBinary, dtype=dt)
-    write('correctedSound.wav', 11025, data)
+    write("correctedSound.wav", 11025, data)
 
 
 if __name__ == "__main__":

@@ -1,122 +1,68 @@
-def hamming7_4(codeWord):
+def hamming_74(codeWord):
     """
-    Input: 4 bits binary codeword
-    Return: 7 bits binary hamming code
-    Example: 0110 -> 1100110
+    This function take 4 bit string in binary format and encode it following
+    hamming(7,4) algorithm
+    1   2   3   4   5   6   7
+    p1  p2  x3  p4  x2  x1  x0
     """
     if len(codeWord) != 4:
-        print("error : word is not 4 bits long \n")
+        print("Error, must be a bit value")
         return -1
-
-    index = 0
-    # Init Hamming code
-    hamming = [-1, -1, 2, -1, 2, 2, 2]
-
-    for bit in codeWord:
-        while hamming[index] == -1:
-            index += 1
-
-        # Transfer data from codeword to Hamming
-        if bit == "1":
-            hamming[index] = 1
-        if bit == "0":
-            hamming[index] = 0
-        index += 1
-
-    # Set the parity bits
-    for i in range(7):
-
-        # if parity bit
-        if hamming[i] == -1:
-            bitToCheck = i + 1
-            bitChecked = 0
-            j = i
-            parityCount = 0
-
-            while j < 7:
-
-                # check elements
-                while bitChecked < bitToCheck:
-                    if hamming[j] == 1:
-                        parityCount += 1
-                    bitChecked += 1
-                    j += 1
-
-                bitChecked = 0
-                j += bitToCheck
-
-            # if even number of bit 1
-            if (parityCount % 2) == 0:
-                hamming[i] = 0
-            # if odd number of bit 1
-            else:
-                hamming[i] = 1
-
-    codedWordStr = ""
-    for bit in hamming:
-        codedWordStr += str(bit)
-    return codedWordStr
+    x = [int(x) for x in list(codeWord)]
+    p1 = x[0] ^ x[1] ^ x[3]
+    p2 = x[0] ^ x[2] ^ x[3]
+    p4 = x[1] ^ x[2] ^ x[3]
+    hamming = [p1, p2, x[0], p4, x[1], x[2], x[3]]
+    codedWord = [str(bit) for bit in hamming]
+    codedWord = "".join(codedWord)
+    return codedWord
 
 
 def decodeHamming7_4(hammingCode):
     """
     Input: 7 bits Hamming code
     Return: original 4 bits coded word
+    1   2   3   4   5   6   7
+    p1  p2  x3  p4  x2  x1  x0
     Example: 1100110 -> 0110
     """
     if len(hammingCode) != 7:
-        print("error : word is not 7 bits long \n")
+        print("Error: Must be a 7 bit value")
         return -1
 
-    correctMsg = ""
+    hammingCode_int = [int(bit) for bit in hammingCode]
 
-    # getting the parity bit
-    parityBit1 = int(hammingCode[0])
-    parityBit2 = int(hammingCode[1])
-    parityBit4 = int(hammingCode[3])
+    # Getting the parity bits and data bits
+    p1 = hammingCode_int[0]
+    p2 = hammingCode_int[1]
+    p4 = hammingCode_int[3]
+    x3 = hammingCode_int[2]
+    x2 = hammingCode_int[4]
+    x1 = hammingCode_int[5]
+    x0 = hammingCode_int[6]
 
-    # computing the parity bit
-    realPB1 = (int(hammingCode[2]) + int(hammingCode[4]) + int(hammingCode[6])) % 2
-    realPB2 = (int(hammingCode[2]) + int(hammingCode[5]) + int(hammingCode[6])) % 2
-    realPB4 = (int(hammingCode[4]) + int(hammingCode[5]) + int(hammingCode[6])) % 2
-
-    errorBit = 0
-
-    # computing the index of the erroneous bit if any
-    if realPB1 != parityBit1:
-        errorBit += 1
-    if realPB2 != parityBit2:
-        errorBit += 2
-    if realPB4 != parityBit4:
-        errorBit += 4
-    errorBit -= 1
-
-    corrected = []
-    for bit in hammingCode:
-        corrected.append(bit)
-
-    # if error detected, correct the error in corrected
-    if errorBit != -1:
-        if corrected[errorBit] == "0":
-            corrected[errorBit] = "1"
-        elif corrected[errorBit] == "1":
-            corrected[errorBit] = "0"
+    # Compute the check bits
+    c1 = p1 ^ x3 ^ x2 ^ x0
+    c2 = p2 ^ x3 ^ x1 ^ x0
+    c3 = p4 ^ x2 ^ x1 ^ x0
+    pos = c1 * 1 + c2 * 2 + c3 * 4
+    if pos:
+        if hammingCode_int[pos - 1] == 0:
+            hammingCode_int[pos - 1] = 1
         else:
-            print("error in decodeHamming7_4 : character was not a bit ")
-
-    # after correction, extraction of the data bits and concatenation with the resulting string
-    correctMsg += corrected[2]
-    correctMsg += corrected[4]
-    correctMsg += corrected[5]
-    correctMsg += corrected[6]
-
-    return correctMsg
+            hammingCode_int[pos - 1] = 0
+    decoded = (
+        str(hammingCode_int[2])
+        + str(hammingCode_int[4])
+        + str(hammingCode_int[5])
+        + str(hammingCode_int[6])
+    )
+    return decoded
 
 
 def main():
-    test = hamming7_4("0110")
-    print(test)
-    print(decodeHamming7_4("1100110"))
+    print(hamming_74("0111"))
+    print(decodeHamming7_4("0001110"))
 
 
 if __name__ == "__main__":
