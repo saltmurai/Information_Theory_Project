@@ -45,12 +45,18 @@ def decodeHamming7_4(hammingCode):
     c1 = p1 ^ x3 ^ x2 ^ x0
     c2 = p2 ^ x3 ^ x1 ^ x0
     c3 = p4 ^ x2 ^ x1 ^ x0
+
+    # Compute the position of 1 error bit
     pos = c1 * 1 + c2 * 2 + c3 * 4
+    
+    # If error flip the error bit
     if pos:
         if hammingCode_int[pos - 1] == 0:
             hammingCode_int[pos - 1] = 1
         else:
             hammingCode_int[pos - 1] = 0
+    
+    # Return the orginal codeword
     decoded = (
         str(hammingCode_int[2])
         + str(hammingCode_int[4])

@@ -1,9 +1,9 @@
-import numpy
-from channel import Channel
-import hamming
-from scipy.io.wavfile import read
-from scipy.io.wavfile import write
 import matplotlib.pyplot as plt
+import numpy
+from scipy.io.wavfile import read, write
+
+import hamming
+from channel import Channel
 
 
 def plotSound(path):
