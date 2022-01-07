@@ -1,9 +1,14 @@
 import matplotlib.pyplot as plt
+import argparse
 import numpy
 from scipy.io.wavfile import read, write
 
 import hamming
 from channel import Channel
+
+parser = argparse.ArgumentParser()
+parser.add_argument("soundPath", help="Path to sound file")
+args = parser.parse_args()
 
 
 def plotSound(path):
@@ -16,14 +21,15 @@ def plotSound(path):
     plt.plot(audio[0:33100])
     plt.ylabel("Amplitude")
     plt.xlabel("Time (1/10 ms)")
-    plt.title(path)
+    plt.title("original " + path)
     plt.show()
     plt.clf()
+    plt.savefig("sound.png")
     return audio
 
 
 def main():
-    audio = plotSound("sound.wav")
+    audio = plotSound(args.soundPath)
     audioCodedValue = []
     for value in audio:
         audioCodedValue.append(f"{value:08b}")
@@ -51,14 +57,15 @@ def main():
     # plot of the corrupted msg
     plt.plot(corruptedMsg[0:33100])
     plt.ylabel("Amplitude")
-    plt.xlabel("Time (in 10th of ms) ")
-    plt.title("corrupted sound")
+    plt.xlabel("Time (1/10 ms) ")
+    plt.title("Corrupted " + args.soundPath)
     plt.show()
     plt.clf()
+    plt.savefig("corruted_sound.png")
 
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(corruptedMsg, dtype=dt)
-    write("corruptedSound.wav", 11025, data)
+    write("corrupted_" + args.soundPath, 11025, data)
     errorRate = 1
     channelAudio1 = Channel(codedAudio1, errorRate)
     channelAudio2 = Channel(codedAudio2, errorRate)
@@ -81,13 +88,14 @@ def main():
     # plot of the corrected msg
     plt.plot(decodedHammingAudioBinary[0:33100])
     plt.ylabel("Amplitude")
-    plt.xlabel("Time (in 10th of ms) ")
-    plt.title("decoded and corrected sound ")
+    plt.xlabel("Time (1/10 of ms) ")
+    plt.title("Decoded and Corrected sound")
     plt.show()
+    plt.savefig("corrected_sound.png")
 
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(decodedHammingAudioBinary, dtype=dt)
-    write("correctedSound.wav", 11025, data)
+    write("corrected_" + args.soundPath, 11025, data)
 
 
 if __name__ == "__main__":
