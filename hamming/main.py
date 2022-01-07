@@ -8,6 +8,7 @@ from channel import Channel
 
 parser = argparse.ArgumentParser()
 parser.add_argument("soundPath", help="Path to sound file")
+parser.add_argument("errorRate", help="Errror rate of channel")
 args = parser.parse_args()
 
 
@@ -24,7 +25,6 @@ def plotSound(path):
     plt.title("original " + path)
     plt.show()
     plt.clf()
-    plt.savefig("sound.png")
     return audio
 
 
@@ -44,7 +44,7 @@ def main():
         codedAudio1.append(coded1)
         codedAudio2.append(coded2)
 
-    errorRate = 1
+    errorRate = int(args.errorRate)
 
     # Pass the audio through the channel
     channel = Channel(audioCodedValue, errorRate)
@@ -61,12 +61,9 @@ def main():
     plt.title("Corrupted " + args.soundPath)
     plt.show()
     plt.clf()
-    plt.savefig("corruted_sound.png")
-
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(corruptedMsg, dtype=dt)
     write("corrupted_" + args.soundPath, 11025, data)
-    errorRate = 1
     channelAudio1 = Channel(codedAudio1, errorRate)
     channelAudio2 = Channel(codedAudio2, errorRate)
     decodedHammingAudioBinary = []
@@ -91,7 +88,6 @@ def main():
     plt.xlabel("Time (1/10 of ms) ")
     plt.title("Decoded and Corrected sound")
     plt.show()
-    plt.savefig("corrected_sound.png")
 
     dt = numpy.dtype(numpy.uint8)
     data = numpy.array(decodedHammingAudioBinary, dtype=dt)
