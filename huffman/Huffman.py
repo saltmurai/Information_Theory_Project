@@ -135,7 +135,7 @@ def main():
         data = f.read()
         encoding, tree = Huffman_Encoding(data)
         print("Dau ra duoc ma hoa: " + encoding)
-        print("Dau ra duoc giai ma" + Huffman_Decoding(encoding, tree))
+        print("Dau ra duoc giai ma: " + Huffman_Decoding(encoding, tree))
 
 
 if __name__ == "__main__":
