@@ -136,6 +136,8 @@ def main():
         encoding, tree = Huffman_Encoding(data)
         print("Dau ra duoc ma hoa: " + encoding)
         print("Dau ra duoc giai ma: " + Huffman_Decoding(encoding, tree))
+        with open("output_" + args.textFile, "w") as o:
+            o.write(str(encoding))
 
 
 if __name__ == "__main__":
