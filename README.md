@@ -26,7 +26,7 @@ git clone https://github.com/saltmurai/Information_Theory_Project
 
 Hoặc có thể giải nén folder bài tập lớn.
 
-Sau đó cài đặt thư viện scipy và matplolib hoặc có thể dùng lệnh sau:
+Sau đó cài đặt thư viện scipy, matplolib và tabulate sử dụng pip hoặc có thể dùng lệnh sau:
 
 ```bash
 pip install -r requirements.txt
@@ -37,7 +37,7 @@ pip install -r requirements.txt
 ---
 
 #### Hướng dẫn chạy chương trình
-
+*Lưu ý cần cài đặt thư viện scipy, matplotlib và tabulate dùng pip trước*
 **Mã hoá văn bản theo Huffman**
 
 Mở thư mục huffman trên terminal
@@ -46,11 +46,9 @@ Mở thư mục huffman trên terminal
 python3 Huffman.py text.txt
 ```
 
-Trong đó text.txt là một file văn bản bất kỳ trong đó chứa nội dung cần mã hoá, kết quả mã hoá sẽ được in ra trên màn hình và viết ra 1 file **output.txt**
+Trong đó text.txt là một file văn bản bất kỳ trong đó chứa nội dung cần mã hoá, kết quả mã hoá sẽ được in ra trên màn hình và viết ra 2 file. **binary_text.txt** là văn bản đã được mã hoá theo cơ số 2 và **info_text.txt** là file chứa các thông tin được in ra trên màn hình. 
 
 **Mã Hamming cho truyền tín hiệu âm thanh**
-
-*Lưu ý cần cài đặt thư viện scipy và matplotlib dùng pip trước*
 
 Mở thu mục hamming trên terminal, trong folder đã có sẵn một file âm thanh 8-bit demo là **sound.wav**, có thể sử dụng các file âm thanh 8-bit khác. Để mô phỏng việc truyền tín hiệu âm thanh qua kênh truyền với mức nhiễu là 1% gõ lệnh sau trên terminal:
 
