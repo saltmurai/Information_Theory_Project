@@ -1,5 +1,8 @@
 import math
 import argparse
+from tabulate import tabulate
+from io import StringIO
+buf = StringIO()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("textFile", help="Path to sound file")
@@ -66,12 +69,12 @@ def Huffman_Encoding(data):
     symbols = symbol_with_probs.keys()
     probabilities = symbol_with_probs.values()
     etrpy = 0
-    print("Ký tự: ", symbols)
-    print("Xác suất: ", probabilities)
+    # print("Ký tự: ", symbols)
+    # print("Xác suất: ", probabilities)
     # Tính Entropy của văn bản
     for symbol in symbols:
         etrpy = etrpy - symbol_with_probs[symbol] * math.log2(symbol_with_probs[symbol])
-    print("Entropy của văn bản là: ", etrpy)
+    # print("Entropy của văn bản là: ", etrpy)
 
     nodes = []
 
@@ -98,16 +101,27 @@ def Huffman_Encoding(data):
         nodes.append(newNode)
 
     huffman_encoding = Calculate_Codes(nodes[0])
-    print("Ký tự với mã: ", huffman_encoding)
+    # print("Ký tự với mã: ", huffman_encoding)
     # Tính độ dài trung bình của văn bản
     l = 0
     for symbol in symbols:
         L = len(huffman_encoding[symbol])
         l = l + symbol_with_probs[symbol] * L
-    print("Độ dài trung bình của văn bản: ", l)
-    print("Hệ số nén: {}/{} = {}".format(etrpy, l, etrpy / l))
+    # print("Độ dài trung bình của văn bản: ", l)
+    kn = etrpy / l
+    # print("Hệ số nén: {}/{} = {}".format(etrpy, l, kn))
+
     encoded_output = Output_Encoded(data, huffman_encoding)
-    return encoded_output, nodes[0]
+    return (
+        encoded_output,
+        nodes[0],
+        etrpy,
+        huffman_encoding,
+        l,
+        kn,
+        symbols,
+        probabilities,
+    )
 
 
 def Huffman_Decoding(encoded_data, huffman_tree):
@@ -133,12 +147,32 @@ def main():
 
     with open(args.textFile, "r") as f:
         data = f.read()
-        encoding, tree = Huffman_Encoding(data)
-        print("Dau ra duoc ma hoa: " + encoding)
-        print("Dau ra duoc giai ma: " + Huffman_Decoding(encoding, tree))
-        with open("output_" + args.textFile, "w") as o:
+        (
+            encoding,
+            tree,
+            entrpy,
+            huffman_encoding,
+            l,
+            kn,
+            symbols,
+            prob,
+        ) = Huffman_Encoding(data)
+        # Viet output ra file info_
+        with open("info_" + args.textFile, 'w') as i:
+            headers_1 = ["Ky tu", "Xac suat"]
+            table_1 = zip(symbols, prob)
+            print(tabulate(table_1, headers=headers_1, floatfmt=".6f", tablefmt="pretty", showindex=1), file=i)
+            headers_2 = ["Ky tu", "Tu ma"]
+            table_2 = zip(huffman_encoding.keys(), huffman_encoding.values())
+            print(tabulate(table_2, headers=headers_2, floatfmt=".6f", tablefmt="pretty", showindex=1), file=i)
+            print("Entropy: " + str(entrpy), file=i)
+            print("Do dai trung binh cua van ban: " + str(l), file=i)
+            print("He so nen: " + str(kn), file=i)
+            print("Dau ra duoc ma hoa: " + encoding, file=i)
+            print("Dau ra duoc giai ma: " + Huffman_Decoding(encoding, tree), file=i)
+        # Print ra man hinh
+        print(open('info_' + args.textFile, 'r').read())
+        with open("output_binary" + args.textFile, "w") as o:
             o.write(str(encoding))
-
-
 if __name__ == "__main__":
     main()
