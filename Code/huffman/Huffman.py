@@ -172,7 +172,7 @@ def main():
             print("Dau ra duoc giai ma: " + Huffman_Decoding(encoding, tree), file=i)
         # Print ra man hinh
         print(open('info_' + args.textFile, 'r').read())
-        with open("output_binary" + args.textFile, "w") as o:
+        with open("binary_" + args.textFile, "w") as o:
             o.write(str(encoding))
 if __name__ == "__main__":
     main()
